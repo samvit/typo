@@ -604,5 +604,49 @@ describe Article do
     end
 
   end
+  describe "#merge_with" do
+    before (:each) do 
+      @u1 = User.new :login => 'u1'
+      @u2 = User.new :login => 'u2'
+      @u3 = User.new :login => 'u3'
+
+      @temp_a1 = Article.create!(:title => 'title1', :body => 'body1', :published => true)
+      @temp_a2 = Article.create!(:title => 'title2', :body => 'body2', :published => true)
+      @temp_a3 = Article.create!(:title => 'title3', :body => 'body3', :published => true)
+      
+      @temp_a1.user = @u1
+      @temp_a2.user = @u2
+      @temp_a3.user = @u3
+
+#      @u1.article = @temp_a1
+#      @u2.article = @temp_a2
+#      @u3.article = @temp_a3
+
+      @comment1 = Comment.new({:author => 'patterson',
+                :article => @temp_a1,
+                :body => 'mips god',
+                :ip => '1.2.9.4'})
+      @comment2 = Comment.new({:author => 'fox',
+                :article => @temp_a2,
+                :body => 'rails quiz gen',
+                :ip => '1.2.3.4'})
+      @merged = @temp_a1.merge_with(@temp_a2.id)
+    end
+
+    it "should contain the text of both articles when @merged"  do
+      assert @merged.body.include? @temp_a1.body
+      assert @merged.body.include? @temp_a2.body
+      assert (not (@merged.body.include? @temp_a3.body))
+    end
+
+    it "should have either of the original authors when @merged" do
+      assert (@temp_a1.user==@merged.user or @temp_a2.user==@merged.user)
+      assert (@temp_a3.user != @merged.user)
+    end
+
+    it "should have comments from both articles when @merged" do
+      assert @merged.comments.sort.should == (@temp_a1.comments + @temp_a2.comments).sort
+    end
+  end
 end
 

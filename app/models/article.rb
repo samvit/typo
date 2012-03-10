@@ -466,6 +466,8 @@ class Article < Content
       fusion = self.clone
       fusion.comments = self.comments + other.comments
 
+      debugger
+
       fusion.title = self.title + ", "+ other.title 
       fusion.body = self.body + other.body 
 

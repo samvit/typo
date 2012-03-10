@@ -164,7 +164,7 @@ class Admin::ContentController < Admin::BaseController
         
     @article.published_at = DateTime.strptime(params[:article][:published_at], "%B %e, %Y %I:%M %p GMT%z").utc rescue Time.parse(params[:article][:published_at]).utc rescue nil
 
-    if params.include? :id_to_merge
+    if params.include? :id_to_merge 
         @article = @article.merge_with(params[:id_to_merge])
         params[:id] = @article.id
     end

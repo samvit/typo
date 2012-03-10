@@ -1,9 +1,11 @@
 <% @page_heading = _('New article') %>
 
-<% if @status=="edit" %> 
+<% if @status=="edit" and @article.user.admin? %> 
 <form>
   ID of Article to be merged: <input type="text" name="id_to_merge" /><br />
+
   <input type="submit" value="Merge With This Article" />
+
 </form> 
 <% end %> 
 

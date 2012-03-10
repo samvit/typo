@@ -197,16 +197,6 @@ class Admin::ContentController < Admin::BaseController
     render 'new'
   end
 
-#  def merge_articles(merge_id)
-#      @article_to_be_merged = Article.find(merge_id)
-#
-#      @article_to_be_merged.permalink=@article.permalink
-#      @article.title = @article.title + ", "+ @article_to_be_merged.title 
-#      @article.body = @article.body + @article_to_be_merged.body 
-#
-#      @article.save!
-#      @article_to_be_merged.save!
-#  end
 
 
   def set_the_flash

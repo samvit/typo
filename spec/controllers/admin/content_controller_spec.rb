@@ -3,6 +3,25 @@ require 'spec_helper'
 describe Admin::ContentController do
   render_views
 
+  describe "#new_or_edit" do
+    it "should call the merge_with method and set the params id correctly"do
+      u1 = User.new :login => 'u1'
+      temp_article = Article.create!(:title => 'title1', :body => 'body1', :published => true)
+      
+      temp_article.user = u1
+
+
+      #temp_article=mock('Article', :body => "bod")
+      #temp_article.stub(:lang).and_return("")
+      #temp_article=Article.create(:body => "bod")
+      Article.should_receive(:merge_with).with("3").and_return(temp_article)
+      get 'edit', :id_to_merge => 3
+      assigns(params[:id]).should == 3 
+      assigns(@article).should == temp_article
+      assigns(@status).should == "edit"
+    end
+  end
+
   # Like it's a shared, need call everywhere
   shared_examples_for 'index action' do
 

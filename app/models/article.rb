@@ -48,7 +48,7 @@ class Article < Content
 
   before_create :set_defaults, :create_guid
   after_create :add_notifications
-  before_save :set_published_at, :ensure_settings_type
+  before_save :set_published_at
   after_save :post_trigger
   after_save :keywords_to_tags
 
@@ -424,13 +424,6 @@ class Article < Content
     end
   end
 
-  def ensure_settings_type
-    if settings.is_a?(String)
-      # Any dump access forcing de-serialization
-      password.blank?
-    end
-  end
-
   def set_defaults
     if self.attributes.include?("permalink") and
       (self.permalink.blank? or
@@ -465,5 +458,20 @@ class Article < Content
     to = from + 1.day unless day.blank?
     to = to - 1 # pull off 1 second so we don't overlap onto the next day
     return from..to
+  end
+
+  public
+  def merge_with(other_article_id)
+      other = Article.find(other_article_id)
+      fusion = self.clone
+      fusion.comments = self.comments + other.comments
+
+      fusion.title = self.title + ", "+ other.title 
+      fusion.body = self.body + other.body 
+
+      other.destroy
+      self.destroy
+      fusion.save!
+      return fusion
   end
 end

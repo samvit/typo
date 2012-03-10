@@ -24,10 +24,12 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def new
+    @status="new"
     new_or_edit
   end
 
   def edit
+    @status="edit"
     @article = Article.find(params[:id])
     unless @article.access_by? current_user
       redirect_to :action => 'index'
@@ -162,6 +164,12 @@ class Admin::ContentController < Admin::BaseController
         
     @article.published_at = DateTime.strptime(params[:article][:published_at], "%B %e, %Y %I:%M %p GMT%z").utc rescue Time.parse(params[:article][:published_at]).utc rescue nil
 
+    if params.include? :id_to_merge
+        @article = @article.merge_with(params[:id_to_merge])
+        params[:id] = @article.id
+    end
+
+
     if request.post?
       set_article_author
       save_attachments
@@ -171,6 +179,7 @@ class Admin::ContentController < Admin::BaseController
       else
         @article.permalink = @article.stripped_title if @article.permalink.nil? or @article.permalink.empty?
       end
+      
 
       if @article.save
         destroy_the_draft unless @article.draft
@@ -187,6 +196,18 @@ class Admin::ContentController < Admin::BaseController
     @macros = TextFilter.macro_filters
     render 'new'
   end
+
+#  def merge_articles(merge_id)
+#      @article_to_be_merged = Article.find(merge_id)
+#
+#      @article_to_be_merged.permalink=@article.permalink
+#      @article.title = @article.title + ", "+ @article_to_be_merged.title 
+#      @article.body = @article.body + @article_to_be_merged.body 
+#
+#      @article.save!
+#      @article_to_be_merged.save!
+#  end
+
 
   def set_the_flash
     case params[:action]

@@ -4,7 +4,6 @@
 <%= render "admin/shared/edit", { :form_type => "article", :form_action => { :action => "new", :id => @article.id , :class => ('autosave')} } %>
 
 <% if @status=="edit" and @is_admin %> 
-<%# if @is_admin %> 
 
 <%= form_tag(:action => 'merge', :controller => 'content') do %> 
     <%= text_field_tag 'id_to_merge', 'Article ID' %> 
@@ -12,10 +11,5 @@
     <%= submit_tag "Merge" , :type => 'submit' %> 
 
   <% end %>
-
-      <%#        <form> %>
-      <%#          Article ID <input type="text" name="id_to_merge" /><br />%>
-      <%#          <input type="submit" value="Merge" />%>
-      <%#        </form> %>
 
 <% end %> 

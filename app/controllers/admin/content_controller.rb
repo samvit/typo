@@ -117,12 +117,11 @@ class Admin::ContentController < Admin::BaseController
 
   def merge
     @article = Article.find_by_id(params[:article_id])
-    puts params
     if params.include? 'id_to_merge'
       @article = @article.merge_with(params[:id_to_merge])
       params[:id] = @article.id
     end
-    redirect_to :edit, :id => 12
+    redirect_to :action => 'edit' , :id => @article.id
   end
 
   #protected

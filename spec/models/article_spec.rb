@@ -610,9 +610,9 @@ describe Article do
       @u2 = User.new :login => 'u2'
       @u3 = User.new :login => 'u3'
 
-      @temp_a1 = Article.create!(:title => 'title1', :body => 'body1', :published => true)
-      @temp_a2 = Article.create!(:title => 'title2', :body => 'body2', :published => true)
-      @temp_a3 = Article.create!(:title => 'title3', :body => 'body3', :published => true)
+      @temp_a1 = Article.create!(:title => 'title1', :body => 'body1', :published => true, :author =>"vamsi")
+      @temp_a2 = Article.create!(:title => 'title2', :body => 'body2', :published => true, :author =>"sarat")
+      @temp_a3 = Article.create!(:title => 'title3', :body => 'body3', :published => true, :author =>"hi")
       
       @temp_a1.user = @u1
       @temp_a2.user = @u2
@@ -640,8 +640,10 @@ describe Article do
     end
 
     it "should have either of the original authors when @merged" do
-      assert (@temp_a1.user==@merged.user or @temp_a2.user==@merged.user)
-      assert (@temp_a3.user != @merged.user)
+      #assert (@temp_a1.user==@merged.user or @temp_a2.user==@merged.user)
+      #assert (@temp_a3.user != @merged.user)
+      assert (@temp_a1.author==@merged.author or @temp_a2.author==@merged.author)
+      assert (@temp_a3.author != @merged.author)
     end
 
     it "should have comments from both articles when @merged" do

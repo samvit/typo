@@ -152,7 +152,7 @@ class Admin::ContentController < Admin::BaseController
 
 
   def new_or_edit
-    @is_admin = @article.user.admin?
+    @is_admin= (current_user.profile_id == 1)
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)

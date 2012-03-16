@@ -463,17 +463,21 @@ class Article < Content
   public
   def merge_with(other_article_id)
       other = Article.find(other_article_id)
-      fusion = self.clone
-      fusion.comments = self.comments + other.comments
+      fusion=Article.find(self.id)
+
+      comments= Feedback.find_all_by_article_id(other.id)
+      #fusion.comments = self.comments + other.comments
+
+      for c in comments
+        c.update_attributes(:article_id => fusion.id)
+      end
 
       fusion.title = self.title + ", "+ other.title 
       fusion.body = self.body + other.body 
 
-      fusion.user=self.user
+      fusion.save!
 
       other.destroy
-      self.destroy
-      fusion.save!
       return fusion
   end
 end

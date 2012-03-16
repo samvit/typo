@@ -30,6 +30,7 @@ class Admin::ContentController < Admin::BaseController
 
   def edit
     @status="edit"
+    @is_admin= (current_user.profile_id == 1)
     @article = Article.find(params[:id])
     unless @article.access_by? current_user
       redirect_to :action => 'index'
@@ -116,11 +117,11 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def merge
+    @status = "edit"
     @is_admin= (current_user.profile_id == 1)
     @article = Article.find_by_id(params[:article_id])
     if params.include? 'id_to_merge'
       @article = @article.merge_with(params[:id_to_merge])
-      params[:id] = @article.id
     end
     redirect_to :action => 'edit' , :id => @article.id
   end

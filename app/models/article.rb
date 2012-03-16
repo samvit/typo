@@ -476,7 +476,6 @@ class Article < Content
       fusion.body = self.body + other.body 
 
       fusion.save!
-      p fusion
       other.destroy
       return fusion
   end

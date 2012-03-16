@@ -5,8 +5,9 @@
 
 <% if @status=="edit" and @is_admin %> 
 
-<%= form_tag(:action => 'merge', :controller => 'content') do %> 
-    <%= text_field_tag 'id_to_merge', 'Article ID' %> 
+  <%= form_tag(:action => 'merge', :controller => 'content') do %> 
+    <h2> Merge Articles</h2>
+    Article ID: <%= text_field_tag 'id_to_merge' %> 
     <%= hidden_field_tag :article_id, @article.id%>
     <%= submit_tag "Merge" , :type => 'submit' %> 
 

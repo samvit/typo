@@ -618,10 +618,6 @@ describe Article do
       @temp_a2.user = @u2
       @temp_a3.user = @u3
 
-#      @u1.article = @temp_a1
-#      @u2.article = @temp_a2
-#      @u3.article = @temp_a3
-
       @comment1 = Comment.new({:author => 'patterson',
                 :article => @temp_a1,
                 :body => 'mips god',
@@ -640,8 +636,6 @@ describe Article do
     end
 
     it "should have either of the original authors when @merged" do
-      #assert (@temp_a1.user==@merged.user or @temp_a2.user==@merged.user)
-      #assert (@temp_a3.user != @merged.user)
       assert (@temp_a1.author==@merged.author or @temp_a2.author==@merged.author)
       assert (@temp_a3.author != @merged.author)
     end

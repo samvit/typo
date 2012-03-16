@@ -116,6 +116,7 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def merge
+    @is_admin= (current_user.profile_id == 1)
     @article = Article.find_by_id(params[:article_id])
     if params.include? 'id_to_merge'
       @article = @article.merge_with(params[:id_to_merge])
@@ -152,7 +153,6 @@ class Admin::ContentController < Admin::BaseController
 
 
   def new_or_edit
-    @is_admin= (current_user.profile_id == 1)
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)

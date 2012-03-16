@@ -4,7 +4,7 @@ require 'ruby-debug'
 describe Admin::ContentController do
   render_views
 
-  describe "#new_or_edit" do
+  describe "#merge" do
     it "should only let admininstrators merge articles" do
       Factory(:blog)
       Profile.delete_all
@@ -12,28 +12,32 @@ describe Admin::ContentController do
       @admin_user.editor = 'simple'
       @admin_user.save!
       @admin_article = Factory(:article)
+      @admin_article1 = Factory(:article)
+      @admin_article2 = Factory(:article)
       request.session = { :user => @admin_user.id }
 
-      @admin_article.id = 1
+      Article.should_receive(:find_by_id).with(@admin_article.id).and_return(@admin_article)
 
-      @non_admin_user = Factory(:user, :text_filter => Factory(:markdown), :profile => Factory(:profile_admin, :label =>"randomString"))# Profile::ADMIN))
+      post :merge , :article_id => @admin_article.id , :id_to_merge => @admin_article2.id  
+      #debugger
+      assigns(:is_admin).should == true
+      #@admin_article.id = 1
+
+      @non_admin_user = Factory(:user, :text_filter => Factory(:markdown), :profile => Factory(:profile_publisher))# Profile::ADMIN))
       @non_admin_user.editor = 'simple'
       @non_admin_user.save!
       @non_admin_article = Factory(:article)
+      @non_admin_article1 = Factory(:article)
+      @non_admin_article2 = Factory(:article)
       request.session = { :user => @non_admin_user.id }
 
-      @non_admin_article.id = 2
+      #@non_admin_article.id = 2
 
-      Article.should_receive(:find).with("1").and_return(@admin_article)
 
-      get :edit , :id => @admin_article.id 
-      debugger
-      assigns (:is_admin).should == true
-
-      Article.should_receive(:find).with("2").and_return(@non_admin_article)
+      Article.should_receive(:find_by_id).with(@non_admin_article.id).and_return(@non_admin_article)
       
-      get :edit , :id => @non_admin_article.id 
-      assigns (:is_admin).should == false
+      post :merge , :article_id => @non_admin_article.id , :id_to_merge => @non_admin_article2.id  
+      assigns(:is_admin).should == false
     end
 
     it "should call the merge_with method and set the params id correctly"do

@@ -115,7 +115,17 @@ class Admin::ContentController < Admin::BaseController
     render :text => nil
   end
 
-  protected
+  def merge
+    @article = Article.find_by_id(params[:article_id])
+    puts params
+    if params.include? 'id_to_merge'
+      @article = @article.merge_with(params[:id_to_merge])
+      params[:id] = @article.id
+    end
+    redirect_to :edit, :id => 12
+  end
+
+  #protected
 
   def get_fresh_or_existing_draft_for_article
     if @article.published and @article.id
@@ -141,16 +151,9 @@ class Admin::ContentController < Admin::BaseController
 
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
-  def merge
-    if params.include? :id_to_merge
-      @article = @article.merge_with(params[:id_to_merge])
-      params[:id] = @article.id
-    end
-    @is_admin = @article.user.admin?
-    redirect_to 'edit'
-  end
 
   def new_or_edit
+    @is_admin = @article.user.admin?
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
